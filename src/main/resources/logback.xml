@@ -5,6 +5,20 @@
         </encoder>
     </appender>
 
+    <appender name="mail_appender" class="ch.qos.logback.classic.net.SMTPAppender">
+        <SMTPHost>${smtp.host}</SMTPHost>
+        <SMTPPort>${smtp.port}</SMTPPort>
+        <STARTTLS>true</STARTTLS>
+        <username>${smtp.username}</username>
+        <password>${smtp.password}</password>
+        <From>${smtp.address.from}</From>
+        <To>${smtp.address.to}</To>
+        <Subject>ERROR: - %class{28} %m</Subject>
+        <layout class="ch.qos.logback.classic.html.HTMLLayout">
+            <pattern>%relative%thread%mdc%level%logger%msg</pattern>
+        </layout>
+    </appender>
+
     <appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>./logs/sample.log</file>
         <append>true</append>
@@ -30,7 +44,13 @@
         <appender-ref ref="FILE"/>
     </logger>
 
+    <logger name="mail_logger">
+        <level value="DEBUG"/>
+        <appender-ref ref="mail_appender"/>
+    </logger>
+
     <root level="DEBUG">
         <appender-ref ref="STDOUT"/>
+        <appender-ref ref="mail_appender"/>
     </root>
 </configuration>
